@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Triângulo Interativo Profissional</title>
+<title>Triângulo Interativo Centralizado</title>
 <style>
   body { font-family: Arial, sans-serif; text-align: center; background-color: #f9f9f9; padding: 20px; }
   input, button { margin: 10px; padding: 8px; font-size: 18px; }
@@ -70,9 +70,15 @@ function desenharTriangulo() {
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  const escala = Math.min(canvas.width, canvas.height) * 0.4 / Math.max(a, b);
+  const margem = 100;
+  const larguraTriangulo = Math.max(a, b);
+  const escala = (canvas.width - 2 * margem) / larguraTriangulo;
 
-  const Ax = 100, Ay = canvas.height - 100;
+  const centroX = canvas.width / 2;
+  const centroY = canvas.height / 2 + b * escala / 2;
+
+  const Ax = centroX - (a * escala) / 2;
+  const Ay = centroY;
   const Bx = Ax + a * escala;
   const By = Ay;
   const Cx = Ax + b * Math.cos(anguloRad) * escala;
@@ -81,23 +87,14 @@ function desenharTriangulo() {
   ctx.strokeStyle = '#cccccc';
   ctx.lineWidth = 1;
   ctx.beginPath();
-  ctx.moveTo(0, Ay);
-  ctx.lineTo(canvas.width, Ay);
-  ctx.moveTo(Ax, 0);
-  ctx.lineTo(Ax, canvas.height);
+  ctx.moveTo(0, centroY);
+  ctx.lineTo(canvas.width, centroY);
+  ctx.moveTo(centroX, 0);
+  ctx.lineTo(centroX, canvas.height);
   ctx.stroke();
 
-  ctx.fillStyle = '#aaa';
-  for (let x = 0; x <= canvas.width; x += 50) {
-    ctx.fillRect(x, Ay - 5, 1, 10);
-    ctx.fillText(Math.round((x - Ax) / escala), x, Ay + 20);
-  }
-  for (let y = 0; y <= canvas.height; y += 50) {
-    ctx.fillRect(Ax - 5, y, 10, 1);
-    ctx.fillText(Math.round((Ay - y) / escala), Ax - 30, y);
-  }
-
   ctx.strokeStyle = '#000';
+  ctx.lineWidth = 2;
   ctx.beginPath();
   ctx.moveTo(Ax, Ay);
   ctx.lineTo(Bx, By);
@@ -112,24 +109,21 @@ function desenharTriangulo() {
     ctx.arc(x, y, 25, anguloInicio, anguloFim);
     ctx.stroke();
   }
-
   desenharArco(Ax, Ay, Math.PI, 1.5 * Math.PI, 'red');
   desenharArco(Bx, By, 1.5 * Math.PI, 0, 'green');
   desenharArco(Cx, Cy, Math.atan2(Cy - By, Cx - Bx), Math.atan2(Cy - Ay, Cx - Ax), 'blue');
 
   ctx.fillStyle = "blue";
   ctx.font = "16px Arial";
-  ctx.fillText(`a = ${a.toFixed(2)} unidades`, (Ax + Bx)/2, Ay + 30);
+  ctx.fillText(`a = ${a.toFixed(2)} unidades`, (Ax + Bx)/2, Ay + 20);
   ctx.fillText(`b = ${b.toFixed(2)} unidades`, (Ax + Cx)/2, (Ay + Cy)/2);
   ctx.fillText(`c = ${c.toFixed(2)} unidades`, (Bx + Cx)/2, (By + Cy)/2);
 
   const angA = Math.asin((a * Math.sin(anguloRad)) / c) * (180/Math.PI);
   const angB = Math.asin((b * Math.sin(anguloRad)) / c) * (180/Math.PI);
-  const angC = 180 - angA - angB;
-
   ctx.fillStyle = "red";
   ctx.fillText(`${anguloDeg.toFixed(1)}°`, Ax + 10, Ay - 10);
-  ctx.fillText(`${angA.toFixed(1)}°`, Bx - 40, By - 10);
+  ctx.fillText(`${angA.toFixed(1)}°`, Bx - 50, By - 10);
   ctx.fillText(`${angB.toFixed(1)}°`, Cx + 10, Cy - 10);
 }
 </script>
