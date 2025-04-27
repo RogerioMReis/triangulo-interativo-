@@ -70,27 +70,40 @@ function desenharTriangulo() {
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  const margem = 100;
-  const larguraTriangulo = Math.max(a, b);
-  const escala = (canvas.width - 2 * margem) / larguraTriangulo;
+  const margem = 50;
+  const pontos = [
+    { x: 0, y: 0 },
+    { x: a, y: 0 },
+    { x: b * Math.cos(anguloRad), y: b * Math.sin(anguloRad) }
+  ];
 
-  const centroX = canvas.width / 2;
-  const centroY = canvas.height / 2 + b * escala / 2;
+  let minX = Math.min(...pontos.map(p => p.x));
+  let maxX = Math.max(...pontos.map(p => p.x));
+  let minY = Math.min(...pontos.map(p => p.y));
+  let maxY = Math.max(...pontos.map(p => p.y));
 
-  const Ax = centroX - (a * escala) / 2;
-  const Ay = centroY;
-  const Bx = Ax + a * escala;
-  const By = Ay;
-  const Cx = Ax + b * Math.cos(anguloRad) * escala;
-  const Cy = Ay - b * Math.sin(anguloRad) * escala;
+  const larguraTri = maxX - minX;
+  const alturaTri = maxY - minY;
+
+  const escala = Math.min((canvas.width - 2 * margem) / larguraTri, (canvas.height - 2 * margem) / alturaTri);
+
+  const offsetX = (canvas.width - (larguraTri * escala)) / 2 - minX * escala;
+  const offsetY = (canvas.height + (alturaTri * escala)) / 2 - maxY * escala;
+
+  const Ax = offsetX + pontos[0].x * escala;
+  const Ay = offsetY - pontos[0].y * escala;
+  const Bx = offsetX + pontos[1].x * escala;
+  const By = offsetY - pontos[1].y * escala;
+  const Cx = offsetX + pontos[2].x * escala;
+  const Cy = offsetY - pontos[2].y * escala;
 
   ctx.strokeStyle = '#cccccc';
   ctx.lineWidth = 1;
   ctx.beginPath();
-  ctx.moveTo(0, centroY);
-  ctx.lineTo(canvas.width, centroY);
-  ctx.moveTo(centroX, 0);
-  ctx.lineTo(centroX, canvas.height);
+  ctx.moveTo(0, offsetY);
+  ctx.lineTo(canvas.width, offsetY);
+  ctx.moveTo(offsetX, 0);
+  ctx.lineTo(offsetX, canvas.height);
   ctx.stroke();
 
   ctx.strokeStyle = '#000';
@@ -108,7 +121,7 @@ function desenharTriangulo() {
     ctx.beginPath();
     ctx.strokeStyle = cor;
     ctx.lineWidth = 2;
-    ctx.arc(x, y, 25, angulo1, angulo2, false);
+    ctx.arc(x, y, 25, angulo1, angulo2, true);
     ctx.stroke();
   }
 
@@ -118,15 +131,15 @@ function desenharTriangulo() {
 
   ctx.fillStyle = "blue";
   ctx.font = "16px Arial";
-  ctx.fillText(`a = ${a.toFixed(2)} unidades`, (Ax + Bx)/2, Ay + 20);
+  ctx.fillText(`a = ${a.toFixed(2)} unidades`, (Ax + Bx)/2, (Ay + By)/2);
   ctx.fillText(`b = ${b.toFixed(2)} unidades`, (Ax + Cx)/2, (Ay + Cy)/2);
   ctx.fillText(`c = ${c.toFixed(2)} unidades`, (Bx + Cx)/2, (By + Cy)/2);
 
   const angA = Math.asin((a * Math.sin(anguloRad)) / c) * (180/Math.PI);
   const angB = Math.asin((b * Math.sin(anguloRad)) / c) * (180/Math.PI);
   ctx.fillStyle = "red";
-  ctx.fillText(`${anguloDeg.toFixed(1)}°`, Ax + 10, Ay - 10);
-  ctx.fillText(`${angA.toFixed(1)}°`, Bx - 50, By - 10);
+  ctx.fillText(`${anguloDeg.toFixed(1)}°`, Ax + 10, Ay + 20);
+  ctx.fillText(`${angA.toFixed(1)}°`, Bx - 50, By + 20);
   ctx.fillText(`${angB.toFixed(1)}°`, Cx + 10, Cy - 10);
 }
 </script>
