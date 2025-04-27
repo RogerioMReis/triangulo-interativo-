@@ -102,16 +102,19 @@ function desenharTriangulo() {
   ctx.closePath();
   ctx.stroke();
 
-  function desenharArco(x, y, anguloInicio, anguloFim, cor) {
+  function desenharArcoReal(x, y, lado1X, lado1Y, lado2X, lado2Y, cor) {
+    const angulo1 = Math.atan2(lado1Y - y, lado1X - x);
+    const angulo2 = Math.atan2(lado2Y - y, lado2X - x);
     ctx.beginPath();
     ctx.strokeStyle = cor;
     ctx.lineWidth = 2;
-    ctx.arc(x, y, 25, anguloInicio, anguloFim);
+    ctx.arc(x, y, 25, angulo1, angulo2, false);
     ctx.stroke();
   }
-  desenharArco(Ax, Ay, Math.PI, 1.5 * Math.PI, 'red');
-  desenharArco(Bx, By, 1.5 * Math.PI, 0, 'green');
-  desenharArco(Cx, Cy, Math.atan2(Cy - By, Cx - Bx), Math.atan2(Cy - Ay, Cx - Ax), 'blue');
+
+  desenharArcoReal(Ax, Ay, Bx, By, Cx, Cy, 'red');
+  desenharArcoReal(Bx, By, Cx, Cy, Ax, Ay, 'green');
+  desenharArcoReal(Cx, Cy, Ax, Ay, Bx, By, 'blue');
 
   ctx.fillStyle = "blue";
   ctx.font = "16px Arial";
