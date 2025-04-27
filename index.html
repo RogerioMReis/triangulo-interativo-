@@ -2,83 +2,130 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Triângulo Interativo</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            text-align: center;
-        }
-        input, button {
-            margin: 5px;
-            padding: 8px;
-            font-size: 16px;
-        }
-        canvas {
-            margin-top: 20px;
-            border: 1px solid black;
-            background-color: #f0f8ff;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Triângulo Interativo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    label, input, button {
+      font-size: 18px;
+      margin: 8px;
+    }
+    input {
+      padding: 5px;
+      width: 80px;
+      text-align: center;
+    }
+    button {
+      padding: 8px 20px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .resultados {
+      margin-top: 20px;
+      padding: 15px;
+      background: #e3f2fd;
+      border: 1px solid #90caf9;
+      border-radius: 8px;
+      width: 300px;
+      text-align: left;
+    }
+    canvas {
+      margin-top: 30px;
+      background-color: #e3f2fd;
+      border: 1px solid #90caf9;
+    }
+  </style>
 </head>
 <body>
-    <h1>Triângulo Interativo</h1>
 
-    <label>Lado a: <input type="number" id="ladoA" value="3" min="0"></label><br>
-    <label>Lado b: <input type="number" id="ladoB" value="4" min="0"></label><br>
-    <label>Ângulo (°): <input type="number" id="angulo" value="90" min="1" max="179"></label><br>
+<h1>Triângulo Interativo</h1>
 
-    <button onclick="desenharTriangulo()">Desenhar Triângulo</button>
+<label>Lado a: <input type="number" id="ladoA" value="3" min="0"></label>
+<label>Lado b: <input type="number" id="ladoB" value="4" min="0"></label>
+<label>Ângulo (°): <input type="number" id="angulo" value="90" min="1" max="179"></label>
+<br>
+<button onclick="desenharTriangulo()">Desenhar Triângulo</button>
 
-    <canvas id="canvas" width="600" height="600"></canvas>
+<div id="resultados" class="resultados" style="display: none;"></div>
 
-    <script>
-        function desenharTriangulo() {
-            var a = parseFloat(document.getElementById('ladoA').value);
-            var b = parseFloat(document.getElementById('ladoB').value);
-            var angulo = parseFloat(document.getElementById('angulo').value) * Math.PI / 180;
+<canvas id="canvas" width="700" height="700"></canvas>
 
-            var c = Math.sqrt(a*a + b*b - 2*a*b*Math.cos(angulo));
+<script>
+function desenharTriangulo() {
+    var a = parseFloat(document.getElementById('ladoA').value);
+    var b = parseFloat(document.getElementById('ladoB').value);
+    var anguloDeg = parseFloat(document.getElementById('angulo').value);
+    var anguloRad = anguloDeg * Math.PI / 180;
 
-            var canvas = document.getElementById('canvas');
-            var ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+    var c = Math.sqrt(a*a + b*b - 2*a*b*Math.cos(anguloRad));
+    var area = 0.5 * a * b * Math.sin(anguloRad);
+    var perimetro = a + b + c;
+    var altura = (2 * area) / a;
 
-            var escala = 50; // Escala de visualização
+    var tipo = (a === b && anguloDeg === 90) ? 'Isósceles' : (a !== b ? 'Escaleno' : 'Equilátero');
 
-            var Ax = 50, Ay = 550;
-            var Bx = Ax + a * escala, By = Ay;
-            var Cx = Ax + b * Math.cos(angulo) * escala;
-            var Cy = Ay - b * Math.sin(angulo) * escala;
+    document.getElementById('resultados').style.display = 'block';
+    document.getElementById('resultados').innerHTML = `
+      <b>Resultados:</b><br>
+      Hipotenusa (c): ${c.toFixed(2)}<br>
+      Área: ${area.toFixed(2)} unidades²<br>
+      Perímetro: ${perimetro.toFixed(2)}<br>
+      Tipo: ${tipo}<br>
+      Altura (relativa ao lado a): ${altura.toFixed(2)}
+    `;
 
-            // Desenhar o triângulo
-            ctx.beginPath();
-            ctx.moveTo(Ax, Ay);
-            ctx.lineTo(Bx, By);
-            ctx.lineTo(Cx, Cy);
-            ctx.closePath();
-            ctx.stroke();
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Nomear os lados
-            ctx.font = "14px Arial";
-            ctx.fillStyle = "blue";
-            ctx.fillText(`a = ${a.toFixed(2)}`, (Ax + Bx)/2, Ay + 20);
-            ctx.fillText(`b = ${b.toFixed(2)}`, (Ax + Cx)/2 - 10, (Ay + Cy)/2);
-            ctx.fillText(`c = ${c.toFixed(2)}`, (Bx + Cx)/2 + 10, (By + Cy)/2);
+    var escala = 60;
 
-            // Calcular ângulos internos usando a Lei dos Senos
-            var angA = Math.asin((a * Math.sin(angulo)) / c) * (180/Math.PI);
-            var angB = Math.asin((b * Math.sin(angulo)) / c) * (180/Math.PI);
-            var angC = 180 - angA - angB;
+    var Ax = 100, Ay = 600;
+    var Bx = Ax + a * escala;
+    var By = Ay;
+    var Cx = Ax + b * Math.cos(anguloRad) * escala;
+    var Cy = Ay - b * Math.sin(anguloRad) * escala;
 
-            // Escrever os ângulos
-            ctx.fillStyle = "red";
-            ctx.fillText(`${angA.toFixed(1)}°`, Ax + 10, Ay - 10);
-            ctx.fillText(`${angB.toFixed(1)}°`, Bx - 30, By - 10);
-            ctx.fillText(`${angC.toFixed(1)}°`, Cx, Cy - 10);
-        }
-    </script>
+    ctx.beginPath();
+    ctx.moveTo(Ax, Ay);
+    ctx.lineTo(Bx, By);
+    ctx.lineTo(Cx, Cy);
+    ctx.closePath();
+    ctx.stroke();
+
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "blue";
+    ctx.fillText(`a = ${a.toFixed(2)}`, (Ax + Bx)/2, Ay + 20);
+    ctx.fillText(`b = ${b.toFixed(2)}`, (Ax + Cx)/2, (Ay + Cy)/2);
+    ctx.fillText(`c = ${c.toFixed(2)}`, (Bx + Cx)/2, (By + Cy)/2);
+
+    var angA = Math.asin((a * Math.sin(anguloRad)) / c) * (180/Math.PI);
+    var angB = Math.asin((b * Math.sin(anguloRad)) / c) * (180/Math.PI);
+    var angC = 180 - angA - angB;
+
+    ctx.fillStyle = "red";
+    ctx.fillText(`${angA.toFixed(1)}°`, Ax + 10, Ay - 10);
+    ctx.fillText(`${angB.toFixed(1)}°`, Bx - 30, By - 10);
+    ctx.fillText(`${angC.toFixed(1)}°`, Cx, Cy - 10);
+}
+</script>
+
 </body>
 </html>
