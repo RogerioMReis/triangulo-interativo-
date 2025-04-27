@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Triângulo Interativo</title>
+  <title>Triângulo Interativo Responsivo</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -23,16 +23,17 @@
     }
     input {
       padding: 5px;
-      width: 80px;
+      width: 200px;
       text-align: center;
     }
     button {
-      padding: 8px 20px;
+      padding: 10px 30px;
       background-color: #007BFF;
       color: white;
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      margin-top: 10px;
     }
     button:hover {
       background-color: #0056b3;
@@ -43,13 +44,17 @@
       background: #e3f2fd;
       border: 1px solid #90caf9;
       border-radius: 8px;
-      width: 300px;
+      width: 90%;
+      max-width: 400px;
       text-align: left;
     }
     canvas {
       margin-top: 30px;
-      background-color: #e3f2fd;
-      border: 1px solid #90caf9;
+      width: 90%;
+      max-width: 700px;
+      height: auto;
+      background-color: #ffffff;
+      border: 1px solid #ccc;
     }
   </style>
 </head>
@@ -57,9 +62,9 @@
 
 <h1>Triângulo Interativo</h1>
 
-<label>Lado a: <input type="number" id="ladoA" value="3" min="0"></label>
-<label>Lado b: <input type="number" id="ladoB" value="4" min="0"></label>
-<label>Ângulo (°): <input type="number" id="angulo" value="90" min="1" max="179"></label>
+<label><input type="number" id="ladoA" placeholder="Digite o lado 1" min="0"></label>
+<label><input type="number" id="ladoB" placeholder="Digite o lado 2" min="0"></label>
+<label><input type="number" id="angulo" placeholder="Digite o ângulo entre eles" min="1" max="179"></label>
 <br>
 <button onclick="desenharTriangulo()">Desenhar Triângulo</button>
 
@@ -73,6 +78,11 @@ function desenharTriangulo() {
     var b = parseFloat(document.getElementById('ladoB').value);
     var anguloDeg = parseFloat(document.getElementById('angulo').value);
     var anguloRad = anguloDeg * Math.PI / 180;
+
+    if (isNaN(a) || isNaN(b) || isNaN(anguloDeg)) {
+      alert("Por favor, preencha todos os campos corretamente.");
+      return;
+    }
 
     var c = Math.sqrt(a*a + b*b - 2*a*b*Math.cos(anguloRad));
     var area = 0.5 * a * b * Math.sin(anguloRad);
@@ -88,21 +98,30 @@ function desenharTriangulo() {
       Área: ${area.toFixed(2)} unidades²<br>
       Perímetro: ${perimetro.toFixed(2)}<br>
       Tipo: ${tipo}<br>
-      Altura (relativa ao lado a): ${altura.toFixed(2)}
+      Altura (relativa ao lado 1): ${altura.toFixed(2)}
     `;
 
     var canvas = document.getElementById('canvas');
     var ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    var escala = 60;
+    var escala = Math.min(canvas.width, canvas.height) * 0.4 / Math.max(a, b);
 
-    var Ax = 100, Ay = 600;
+    var Ax = 50, Ay = canvas.height - 50;
     var Bx = Ax + a * escala;
     var By = Ay;
     var Cx = Ax + b * Math.cos(anguloRad) * escala;
     var Cy = Ay - b * Math.sin(anguloRad) * escala;
 
+    ctx.strokeStyle = '#cccccc';
+    ctx.beginPath();
+    ctx.moveTo(0, Ay);
+    ctx.lineTo(canvas.width, Ay);
+    ctx.moveTo(Ax, 0);
+    ctx.lineTo(Ax, canvas.height);
+    ctx.stroke();
+
+    ctx.strokeStyle = '#000000';
     ctx.beginPath();
     ctx.moveTo(Ax, Ay);
     ctx.lineTo(Bx, By);
@@ -116,14 +135,13 @@ function desenharTriangulo() {
     ctx.fillText(`b = ${b.toFixed(2)}`, (Ax + Cx)/2, (Ay + Cy)/2);
     ctx.fillText(`c = ${c.toFixed(2)}`, (Bx + Cx)/2, (By + Cy)/2);
 
+    ctx.fillStyle = "red";
     var angA = Math.asin((a * Math.sin(anguloRad)) / c) * (180/Math.PI);
     var angB = Math.asin((b * Math.sin(anguloRad)) / c) * (180/Math.PI);
     var angC = 180 - angA - angB;
-
-    ctx.fillStyle = "red";
     ctx.fillText(`${angA.toFixed(1)}°`, Ax + 10, Ay - 10);
     ctx.fillText(`${angB.toFixed(1)}°`, Bx - 30, By - 10);
-    ctx.fillText(`${angC.toFixed(1)}°`, Cx, Cy - 10);
+    ctx.fillText(`${angC.toFixed(1)}°`, Cx + 10, Cy - 10);
 }
 </script>
 
