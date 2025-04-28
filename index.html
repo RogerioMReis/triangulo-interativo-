@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Triângulo Interativo Centralizado e Ajustado</title>
+<title>Triângulo Interativo Centralizado</title>
 <style>
   body { font-family: Arial, sans-serif; text-align: center; background-color: #f9f9f9; padding: 20px; }
   input, button { margin: 10px; padding: 8px; font-size: 18px; }
@@ -70,7 +70,7 @@ function desenharTriangulo() {
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  const margem = 30;
+  const margem = 50;
   const pontos = [
     { x: 0, y: 0 },
     { x: a, y: 0 },
@@ -87,14 +87,8 @@ function desenharTriangulo() {
 
   const escala = Math.min((canvas.width - 2 * margem) / larguraTri, (canvas.height - 2 * margem) / alturaTri);
 
-  const centroCanvasX = canvas.width / 2;
-  const centroCanvasY = canvas.height / 2;
-
-  const centroTriX = (maxX + minX) / 2;
-  const centroTriY = (maxY + minY) / 2;
-
-  const offsetX = centroCanvasX - centroTriX * escala;
-  const offsetY = centroCanvasY + centroTriY * escala;
+  const offsetX = (canvas.width - (larguraTri * escala)) / 2 - minX * escala;
+  const offsetY = (canvas.height + (alturaTri * escala)) / 2 - maxY * escala;
 
   const Ax = offsetX + pontos[0].x * escala;
   const Ay = offsetY - pontos[0].y * escala;
@@ -106,10 +100,10 @@ function desenharTriangulo() {
   ctx.strokeStyle = '#cccccc';
   ctx.lineWidth = 1;
   ctx.beginPath();
-  ctx.moveTo(0, centroCanvasY);
-  ctx.lineTo(canvas.width, centroCanvasY);
-  ctx.moveTo(centroCanvasX, 0);
-  ctx.lineTo(centroCanvasX, canvas.height);
+  ctx.moveTo(0, offsetY);
+  ctx.lineTo(canvas.width, offsetY);
+  ctx.moveTo(offsetX, 0);
+  ctx.lineTo(offsetX, canvas.height);
   ctx.stroke();
 
   ctx.strokeStyle = '#000';
