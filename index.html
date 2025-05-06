@@ -1,154 +1,61 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Triângulo Interativo Centralizado e Ajustado</title>
-<style>
-  body { font-family: Arial, sans-serif; text-align: center; background-color: #f9f9f9; padding: 20px; }
-  input, button { margin: 10px; padding: 8px; font-size: 18px; }
-  button { background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
-  button:hover { background-color: #0056b3; }
-  .resultados { background: #e3f2fd; border: 1px solid #90caf9; border-radius: 8px; width: 90%; max-width: 400px; margin: 20px auto; padding: 15px; text-align: left; }
-  canvas { margin-top: 20px; width: 90%; max-width: 700px; height: auto; background-color: #ffffff; border: 1px solid #ccc; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Triângulo Interativo Profissional</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Include jsPDF library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
+    <h1>Triângulo Interativo Profissional</h1>
 
-<h1>Triângulo Mágico</h1>
-<input type="number" id="ladoA" placeholder="Digite o lado 1">
-<input type="number" id="ladoB" placeholder="Digite o lado 2">
-<input type="number" id="angulo" placeholder="Digite o ângulo entre eles">
-<br>
-<button onclick="desenharTriangulo()">Desenhar Triângulo</button>
+    <div class="main-container">
 
-<div id="resultados" class="resultados" style="display:none;"></div>
+        <!-- Column 1: Input Form -->
+        <div class="input-column">
+            <div class="input-container">
+                <p class="helper-text">Insira os comprimentos dos lados 'a' e 'b', e o ângulo 'C' (em graus) entre eles.</p>
+                <div>
+                    <label for="lado_a">Lado a:</label>
+                    <input type="number" id="lado_a" placeholder="Comprimento lado a">
+                </div>
+                <div>
+                    <label for="lado_b">Lado b:</label>
+                    <input type="number" id="lado_b" placeholder="Comprimento lado b">
+                </div>
+                <div>
+                    <label for="angulo_C">Ângulo C (°):</label>
+                    <input type="number" id="angulo_C" placeholder="Ângulo entre a e b">
+                </div>
+                <br>
+                 <!-- Button Container -->
+                <div class="button-group">
+                    <button onclick="desenharTriangulo()">Desenhar Triângulo</button>
+                    <button onclick="baixarImagem()">📷 Baixar Imagem</button>
+                    <button onclick="gerarPDF()">📄 Gerar PDF</button>
+                </div>
+            </div>
+        </div>
 
-<canvas id="canvas" width="700" height="700"></canvas>
+        <!-- Column 2: Canvas Diagram -->
+        <div class="canvas-column">
+            <div id="canvas-container">
+                <canvas id="meuCanvas" width="500" height="450">Seu navegador não suporta o Canvas.</canvas>
+            </div>
+        </div>
 
-<script>
-function desenharTriangulo() {
-  const a = parseFloat(document.getElementById('ladoA').value);
-  const b = parseFloat(document.getElementById('ladoB').value);
-  const anguloDeg = parseFloat(document.getElementById('angulo').value);
-  const anguloRad = anguloDeg * Math.PI / 180;
+        <!-- Column 3: Results -->
+        <div class="results-column">
+            <div id="resultado">
+                <b>Resultados:</b><br>
+                Aguardando entrada...
+            </div>
+        </div>
 
-  if (isNaN(a) || isNaN(b) || isNaN(anguloDeg)) {
-    alert("Preencha todos os campos corretamente.");
-    return;
-  }
+    </div> <!-- End main-container -->
 
-  const c = Math.sqrt(a*a + b*b - 2*a*b*Math.cos(anguloRad));
-  const area = 0.5 * a * b * Math.sin(anguloRad);
-  const perimetro = a + b + c;
-  const altura = (2 * area) / a;
-
-  let tipoLados;
-  if (a === b && b === c) tipoLados = "Equilátero";
-  else if (a === b || b === c || a === c) tipoLados = "Isósceles";
-  else tipoLados = "Escaleno";
-
-  let tipoAngulos;
-  if (Math.abs(anguloDeg - 90) < 0.5) tipoAngulos = "Retângulo";
-  else if (anguloDeg > 90) tipoAngulos = "Obtusângulo";
-  else tipoAngulos = "Acutângulo";
-
-  const tipoFinal = `${tipoLados} ${tipoAngulos}`;
-
-  document.getElementById('resultados').style.display = 'block';
-  document.getElementById('resultados').innerHTML = `
-    <b>Resultados:</b><br>
-    Hipotenusa (c): ${c.toFixed(2)} unidades<br>
-    Área: ${area.toFixed(2)} unidades²<br>
-    Perímetro: ${perimetro.toFixed(2)} unidades<br>
-    Tipo: ${tipoFinal}<br>
-    Altura (relativa ao lado 1): ${altura.toFixed(2)} unidades
-  `;
-
-  const canvas = document.getElementById('canvas');
-  const ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  const margem = 30;
-  const pontos = [
-    { x: 0, y: 0 },
-    { x: a, y: 0 },
-    { x: b * Math.cos(anguloRad), y: b * Math.sin(anguloRad) }
-  ];
-
-  let minX = Math.min(...pontos.map(p => p.x));
-  let maxX = Math.max(...pontos.map(p => p.x));
-  let minY = Math.min(...pontos.map(p => p.y));
-  let maxY = Math.max(...pontos.map(p => p.y));
-
-  const larguraTri = maxX - minX;
-  const alturaTri = maxY - minY;
-
-  const escala = Math.min((canvas.width - 2 * margem) / larguraTri, (canvas.height - 2 * margem) / alturaTri);
-
-  const centroCanvasX = canvas.width / 2;
-  const centroCanvasY = canvas.height / 2;
-
-  const centroTriX = (maxX + minX) / 2;
-  const centroTriY = (maxY + minY) / 2;
-
-  const offsetX = centroCanvasX - centroTriX * escala;
-  const offsetY = centroCanvasY + centroTriY * escala;
-
-  const Ax = offsetX + pontos[0].x * escala;
-  const Ay = offsetY - pontos[0].y * escala;
-  const Bx = offsetX + pontos[1].x * escala;
-  const By = offsetY - pontos[1].y * escala;
-  const Cx = offsetX + pontos[2].x * escala;
-  const Cy = offsetY - pontos[2].y * escala;
-
-  ctx.strokeStyle = '#cccccc';
-  ctx.lineWidth = 1;
-  ctx.beginPath();
-  ctx.moveTo(0, centroCanvasY);
-  ctx.lineTo(canvas.width, centroCanvasY);
-  ctx.moveTo(centroCanvasX, 0);
-  ctx.lineTo(centroCanvasX, canvas.height);
-  ctx.stroke();
-
-  ctx.strokeStyle = '#000';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(Ax, Ay);
-  ctx.lineTo(Bx, By);
-  ctx.lineTo(Cx, Cy);
-  ctx.closePath();
-  ctx.stroke();
-
-  function desenharArcoReal(x, y, lado1X, lado1Y, lado2X, lado2Y, cor) {
-    const angulo1 = Math.atan2(lado1Y - y, lado1X - x);
-    const angulo2 = Math.atan2(lado2Y - y, lado2X - x);
-    ctx.beginPath();
-    ctx.strokeStyle = cor;
-    ctx.lineWidth = 2;
-    ctx.arc(x, y, 25, angulo1, angulo2, true);
-    ctx.stroke();
-  }
-
-  desenharArcoReal(Ax, Ay, Bx, By, Cx, Cy, 'red');
-  desenharArcoReal(Bx, By, Cx, Cy, Ax, Ay, 'green');
-  desenharArcoReal(Cx, Cy, Ax, Ay, Bx, By, 'blue');
-
-  ctx.fillStyle = "blue";
-  ctx.font = "16px Arial";
-  ctx.fillText(`a = ${a.toFixed(2)} unidades`, (Ax + Bx)/2, (Ay + By)/2);
-  ctx.fillText(`b = ${b.toFixed(2)} unidades`, (Ax + Cx)/2, (Ay + Cy)/2);
-  ctx.fillText(`c = ${c.toFixed(2)} unidades`, (Bx + Cx)/2, (By + Cy)/2);
-
-  const angA = Math.asin((a * Math.sin(anguloRad)) / c) * (180/Math.PI);
-  const angB = Math.asin((b * Math.sin(anguloRad)) / c) * (180/Math.PI);
-  ctx.fillStyle = "red";
-  ctx.fillText(`${anguloDeg.toFixed(1)}°`, Ax + 10, Ay + 20);
-  ctx.fillText(`${angA.toFixed(1)}°`, Bx - 50, By + 20);
-  ctx.fillText(`${angB.toFixed(1)}°`, Cx + 10, Cy - 10);
-}
-</script>
-
+    <script src="script.js"></script>
 </body>
 </html>
