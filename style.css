@@ -1,0 +1,206 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    text-align: center;
+    background-color: #f4f7f9;
+    padding: 20px;
+    color: #333;
+    line-height: 1.6;
+}
+
+h1 {
+    color: #2c3e50;
+    margin-bottom: 30px;
+}
+
+.main-container {
+    display: flex;
+    flex-wrap: nowrap; /* Prevent wrapping on large screens */
+    gap: 25px;       /* Space between columns */
+    justify-content: center; /* Center columns if they don't fill space */
+    align-items: flex-start; /* Align items to the top */
+    max-width: 1400px; /* Optional: Limit overall width */
+    margin: 0 auto;    /* Center the container */
+}
+
+/* Column Definitions */
+.input-column {
+    flex: 1 1 280px; /* Grow 1, Shrink 1, Basis 280px */
+    min-width: 260px;
+}
+
+.canvas-column {
+    flex: 2 1 500px; /* Grow 2 (take more space), Shrink 1, Basis 500px */
+    min-width: 300px;
+    display: flex;       /* Center canvas within its column */
+    justify-content: center;
+}
+
+.results-column {
+    flex: 1 1 250px; /* Grow 1, Shrink 1, Basis 250px */
+    min-width: 230px;
+}
+
+/* Styling for elements within columns */
+.input-container {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    width: 100%; /* Fill column width */
+    box-sizing: border-box;
+}
+
+.input-container div:not(.button-group) { /* Style input rows */
+    margin-bottom: 12px;
+    display: flex; /* Align label and input */
+    flex-wrap: wrap; /* Allow wrapping if needed */
+    align-items: center;
+}
+
+.input-container label {
+    display: inline-block;
+    width: 90px;
+    margin-right: 10px;
+    font-weight: bold;
+    font-size: 0.95em;
+    color: #555;
+    flex-shrink: 0; /* Prevent label from shrinking */
+}
+
+.input-container input[type="number"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    flex-grow: 1; /* Allow input to take remaining space */
+    min-width: 100px; /* Prevent input from becoming too small */
+}
+
+.helper-text {
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 15px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    width: 100%; /* Span full width */
+}
+
+.button-group {
+    margin-top: 15px;
+    text-align: center; /* Center buttons */
+}
+
+button {
+    padding: 10px 15px; /* Slightly adjusted padding */
+    margin: 5px;      /* Spacing around each button */
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.95em;
+    transition: background-color 0.2s ease;
+    min-width: 100px; /* Minimum button width */
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button:active {
+    background-color: #004085;
+}
+
+#resultado {
+    padding: 15px;
+    background-color: #e9f5ff;
+    border: 1px solid #bce8f1;
+    border-radius: 8px;
+    text-align: left;
+    font-size: 0.95em;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    width: 100%; /* Fill column width */
+    box-sizing: border-box;
+    margin-top: 0; /* Reset margin */
+}
+
+#resultado b {
+    color: #0056b3;
+}
+
+#canvas-container {
+     width: 100%; /* Fill canvas column width */
+     box-sizing: border-box;
+}
+
+canvas {
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Responsive Adjustments - Changed breakpoint */
+@media (max-width: 992px) { /* Breakpoint for switching to vertical stacking */
+    .main-container {
+        flex-direction: column; /* Stack elements vertically */
+        align-items: center;    /* Center items when stacked */
+        gap: 20px;
+    }
+
+    /* Make columns take most of the width when stacked */
+    .input-column,
+    .canvas-column,
+    .results-column {
+        flex-basis: auto; /* Reset flex basis */
+        width: 90%;
+        max-width: 550px; /* Limit max width when stacked */
+    }
+
+     .canvas-column {
+        order: 2; /* Keep canvas in the middle visually */
+    }
+     .input-column {
+        order: 1;
+    }
+     .results-column {
+        order: 3;
+    }
+
+
+    .input-container label {
+        width: 100%; /* Full width labels */
+        margin-bottom: 3px;
+        margin-right: 0;
+        text-align: left;
+    }
+
+    .input-container input[type="number"] {
+        width: 100%;
+    }
+
+    .button-group button {
+         display: block; /* Stack buttons vertically */
+         width: 80%; /* Control button width */
+         margin: 8px auto; /* Center stacked buttons */
+    }
+}
+
+@media (max-width: 480px) {
+     h1 {
+         font-size: 1.5em;
+     }
+     button {
+         font-size: 0.9em;
+         padding: 10px 12px;
+     }
+      .button-group button {
+         width: 90%;
+      }
+      /* Further adjustments for very small screens if needed */
+}
