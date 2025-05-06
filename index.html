@@ -16,25 +16,66 @@
         <!-- Column 1: Input Form -->
         <div class="input-column">
             <div class="input-container">
-                <p class="helper-text">Insira os comprimentos dos lados 'a' e 'b', e o ângulo 'C' (em graus) entre eles.</p>
-                <div>
-                    <label for="lado_a">Lado a:</label>
-                    <input type="number" id="lado_a" placeholder="Comprimento lado a">
+
+                <!-- Mode Selection -->
+                <div class="mode-selection">
+                    <label class="mode-label">Definir Triângulo por:</label>
+                    <div class="radio-group">
+                        <input type="radio" id="modo_lal" name="modo_triangulo" value="LAL" checked onchange="toggleInputMode()">
+                        <label for="modo_lal">Lado-Ângulo-Lado (LAL)</label>
+                    </div>
+                    <div class="radio-group">
+                        <input type="radio" id="modo_lll" name="modo_triangulo" value="LLL" onchange="toggleInputMode()">
+                        <label for="modo_lll">Lado-Lado-Lado (LLL)</label>
+                    </div>
                 </div>
-                <div>
-                    <label for="lado_b">Lado b:</label>
-                    <input type="number" id="lado_b" placeholder="Comprimento lado b">
-                </div>
-                <div>
-                    <label for="angulo_C">Ângulo C (°):</label>
-                    <input type="number" id="angulo_C" placeholder="Ângulo entre a e b">
-                </div>
-                <br>
-                 <!-- Button Container -->
+
+                <!-- Input Fields Container -->
+                <div id="input-fields">
+
+                    <!-- LAL Inputs (Visible by Default) -->
+                    <div id="inputs_lal" class="input-mode-fields">
+                        <p class="helper-text">Insira os comprimentos dos lados 'a' e 'b', e o ângulo 'C' (em graus) entre eles.</p>
+                        <div>
+                            <label for="lado_a_lal">Lado a:</label>
+                            <input type="number" id="lado_a_lal" placeholder="Comprimento lado a">
+                        </div>
+                        <div>
+                            <label for="lado_b_lal">Lado b:</label>
+                            <input type="number" id="lado_b_lal" placeholder="Comprimento lado b">
+                        </div>
+                        <div>
+                            <label for="angulo_C_lal">Ângulo C (°):</label>
+                            <input type="number" id="angulo_C_lal" placeholder="Ângulo entre a e b">
+                        </div>
+                    </div>
+
+                    <!-- LLL Inputs (Hidden by Default) -->
+                    <div id="inputs_lll" class="input-mode-fields" style="display: none;">
+                        <p class="helper-text">Insira os comprimentos dos três lados (a, b, c).</p>
+                         <div>
+                            <label for="lado_a_lll">Lado a:</label>
+                            <input type="number" id="lado_a_lll" placeholder="Comprimento lado a">
+                        </div>
+                        <div>
+                            <label for="lado_b_lll">Lado b:</label>
+                            <input type="number" id="lado_b_lll" placeholder="Comprimento lado b">
+                        </div>
+                         <div>
+                            <label for="lado_c_lll">Lado c:</label>
+                            <input type="number" id="lado_c_lll" placeholder="Comprimento lado c">
+                        </div>
+                    </div>
+
+                </div> <!-- End input-fields -->
+
+                <!-- Button Container -->
                 <div class="button-group">
                     <button onclick="desenharTriangulo()">Desenhar Triângulo</button>
                     <button onclick="baixarImagem()">📷 Baixar Imagem</button>
                     <button onclick="gerarPDF()">📄 Gerar PDF</button>
+                    <!-- Adicionar botão Limpar/Reset aqui seria bom (Modificação 1.2) -->
+                    <!-- <button onclick="limparTudo()">Limpar</button> -->
                 </div>
             </div>
         </div>
@@ -56,6 +97,6 @@
 
     </div> <!-- End main-container -->
 
-    <script src="script.js"></script>
+    <script src="script.js"></script> <!-- GARANTA QUE O CAMINHO ESTEJA CORRETO -->
 </body>
 </html>

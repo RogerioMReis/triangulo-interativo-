@@ -1,3 +1,6 @@
+/* ========================================== */
+/* =============== GERAL ==================== */
+/* ========================================== */
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     text-align: center;
@@ -5,165 +8,230 @@ body {
     padding: 20px;
     color: #333;
     line-height: 1.6;
+    margin: 0; /* Remove default margin */
 }
 
 h1 {
     color: #2c3e50;
     margin-bottom: 30px;
+    font-size: 2em; /* Ajuste o tamanho se necessário */
 }
 
+/* ========================================== */
+/* ========== LAYOUT PRINCIPAL ============== */
+/* ========================================== */
 .main-container {
     display: flex;
-    flex-wrap: nowrap; /* Prevent wrapping on large screens */
-    gap: 25px;       /* Space between columns */
-    justify-content: center; /* Center columns if they don't fill space */
-    align-items: flex-start; /* Align items to the top */
-    max-width: 1400px; /* Optional: Limit overall width */
-    margin: 0 auto;    /* Center the container */
+    flex-wrap: nowrap; /* Não quebra em múltiplas linhas em telas grandes */
+    gap: 25px;       /* Espaço entre as colunas */
+    justify-content: center;
+    align-items: flex-start; /* Alinha colunas ao topo */
+    max-width: 1400px;
+    margin: 0 auto; /* Centraliza o container principal */
 }
 
-/* Column Definitions */
+/* Definições das Colunas */
 .input-column {
-    flex: 1 1 280px; /* Grow 1, Shrink 1, Basis 280px */
-    min-width: 260px;
+    flex: 1 1 300px; /* Cresce 1, Encolhe 1, Base de 300px */
+    min-width: 280px; /* Largura mínima antes de começar a encolher mais */
 }
 
 .canvas-column {
-    flex: 2 1 500px; /* Grow 2 (take more space), Shrink 1, Basis 500px */
+    flex: 2 1 500px; /* Cresce mais, Base de 500px */
     min-width: 300px;
-    display: flex;       /* Center canvas within its column */
+    display: flex;
     justify-content: center;
 }
 
 .results-column {
-    flex: 1 1 250px; /* Grow 1, Shrink 1, Basis 250px */
-    min-width: 230px;
+    flex: 1 1 280px; /* Cresce 1, Encolhe 1, Base de 280px */
+    min-width: 250px;
 }
 
-/* Styling for elements within columns */
-.input-container {
+/* ========================================== */
+/* ======== CONTAINER DE INPUTS (COL 1) ===== */
+/* ========================================== */
+.input-container { /* A caixa branca que contém os inputs */
     background-color: #ffffff;
-    padding: 20px;
+    padding: 25px; /* Aumentei um pouco o padding */
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra mais pronunciada */
     text-align: left;
-    width: 100%; /* Fill column width */
+    width: 100%;
     box-sizing: border-box;
 }
 
-.input-container div:not(.button-group) { /* Style input rows */
+/* --- Seleção de Modo (LAL/LLL) --- */
+.mode-selection {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e0e0e0; /* Cor da borda mais sutil */
+}
+
+.mode-label {
+    display: block;
+    font-weight: 600; /* Um pouco mais de peso */
+    color: #444;
     margin-bottom: 12px;
-    display: flex; /* Align label and input */
-    flex-wrap: wrap; /* Allow wrapping if needed */
+    text-align: center; /* Centralizado dentro da caixa de input */
+    font-size: 1.05em;
+}
+
+.radio-group {
+    display: inline-block;
+    margin-right: 20px; /* Mais espaço entre opções de rádio */
+    margin-bottom: 8px;
+    cursor: pointer;
+    position: relative; /* Para alinhamento do label */
+}
+.radio-group:last-child {
+    margin-right: 0;
+}
+
+.radio-group input[type="radio"] {
+    margin-right: 6px;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.radio-group label {
+    font-weight: normal;
+    color: #333;
+    vertical-align: middle;
+    cursor: pointer;
+    font-size: 0.95em;
+}
+
+/* --- Campos de Input (dentro de LAL/LLL) --- */
+.input-mode-fields .helper-text { /* Texto de ajuda para cada modo */
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 18px; /* Mais espaço abaixo do helper */
+    text-align: center;
+    width: 100%;
+    line-height: 1.4;
+}
+
+.input-mode-fields > div { /* Cada linha de label + input */
+    margin-bottom: 15px; /* Mais espaço entre linhas de input */
+    display: flex;
+    flex-wrap: wrap; /* Permite quebrar em telas pequenas se necessário */
     align-items: center;
 }
 
-.input-container label {
+.input-mode-fields > div label {
     display: inline-block;
-    width: 90px;
+    width: 95px; /* Largura do label */
     margin-right: 10px;
-    font-weight: bold;
+    font-weight: 500; /* Peso médio */
     font-size: 0.95em;
     color: #555;
-    flex-shrink: 0; /* Prevent label from shrinking */
+    flex-shrink: 0; /* Impede o label de encolher */
 }
 
-.input-container input[type="number"] {
-    padding: 10px;
+.input-mode-fields > div input[type="number"] {
+    padding: 10px 12px;
     border: 1px solid #ccc;
     border-radius: 5px;
     box-sizing: border-box;
-    flex-grow: 1; /* Allow input to take remaining space */
-    min-width: 100px; /* Prevent input from becoming too small */
+    flex-grow: 1; /* Input ocupa espaço restante */
+    min-width: 100px;
+    font-size: 1em;
+}
+.input-mode-fields > div input[type="number"]:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+    outline: none;
 }
 
-.helper-text {
-    font-size: 0.9em;
-    color: #666;
-    margin-bottom: 15px;
-    text-align: center;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
-    width: 100%; /* Span full width */
-}
 
+/* --- Botões --- */
 .button-group {
-    margin-top: 15px;
-    text-align: center; /* Center buttons */
+    margin-top: 20px;
+    text-align: center;
 }
 
 button {
-    padding: 10px 15px; /* Slightly adjusted padding */
-    margin: 5px;      /* Spacing around each button */
+    padding: 10px 18px;
+    margin: 8px 5px;
     border: none;
     background-color: #007bff;
     color: white;
     border-radius: 5px;
     cursor: pointer;
     font-size: 0.95em;
-    transition: background-color 0.2s ease;
-    min-width: 100px; /* Minimum button width */
+    font-weight: 500;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    min-width: 100px;
 }
 
 button:hover {
     background-color: #0056b3;
 }
-
 button:active {
     background-color: #004085;
+    transform: translateY(1px);
 }
 
-#resultado {
-    padding: 15px;
-    background-color: #e9f5ff;
-    border: 1px solid #bce8f1;
-    border-radius: 8px;
-    text-align: left;
-    font-size: 0.95em;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    width: 100%; /* Fill column width */
-    box-sizing: border-box;
-    margin-top: 0; /* Reset margin */
-}
-
-#resultado b {
-    color: #0056b3;
-}
-
+/* ========================================== */
+/* ======== CANVAS E RESULTADOS ============= */
+/* ========================================== */
 #canvas-container {
-     width: 100%; /* Fill canvas column width */
+     width: 100%;
      box-sizing: border-box;
 }
 
 canvas {
     background-color: #ffffff;
-    border: 1px solid #ccc;
+    border: 1px solid #d1d1d1; /* Borda mais sutil */
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
     max-width: 100%;
     height: auto;
-    display: block;
+    display: block; /* Remove espaço extra abaixo */
 }
 
-/* Responsive Adjustments - Changed breakpoint */
-@media (max-width: 992px) { /* Breakpoint for switching to vertical stacking */
+#resultado {
+    padding: 20px; /* Mais padding */
+    background-color: #e9f5ff;
+    border: 1px solid #bce8f1;
+    border-radius: 8px;
+    text-align: left;
+    font-size: 0.95em;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.07);
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 0;
+    line-height: 1.7; /* Melhor legibilidade */
+}
+
+#resultado b {
+    color: #0056b3;
+    font-weight: 600;
+}
+
+/* ========================================== */
+/* ========== RESPONSIVIDADE ================ */
+/* ========================================== */
+
+/* Telas Médias e Tablets (onde o layout de 3 colunas pode quebrar) */
+@media (max-width: 992px) {
     .main-container {
-        flex-direction: column; /* Stack elements vertically */
-        align-items: center;    /* Center items when stacked */
-        gap: 20px;
+        flex-direction: column;
+        align-items: center;
+        gap: 25px; /* Espaçamento vertical entre seções */
     }
 
-    /* Make columns take most of the width when stacked */
     .input-column,
     .canvas-column,
     .results-column {
-        flex-basis: auto; /* Reset flex basis */
-        width: 90%;
-        max-width: 550px; /* Limit max width when stacked */
+        flex-basis: auto; /* Reseta a base flex */
+        width: 90%;       /* Ocupa mais da largura */
+        max-width: 600px; /* Limita a largura máxima quando empilhado */
     }
 
      .canvas-column {
-        order: 2; /* Keep canvas in the middle visually */
+        order: 2; /* Ordem visual: Input -> Canvas -> Resultados */
     }
      .input-column {
         order: 1;
@@ -171,36 +239,55 @@ canvas {
      .results-column {
         order: 3;
     }
+}
 
+/* Telas Pequenas (Smartphones) */
+@media (max-width: 576px) {
+     h1 {
+         font-size: 1.6em;
+         margin-bottom: 20px;
+     }
 
-    .input-container label {
-        width: 100%; /* Full width labels */
-        margin-bottom: 3px;
-        margin-right: 0;
+    .input-column,
+    .canvas-column,
+    .results-column {
+        width: 95%; /* Quase largura total */
+    }
+
+    .input-container {
+        padding: 20px;
+    }
+
+    .input-mode-fields > div label {
+        width: 100%; /* Labels acima dos inputs */
+        margin-bottom: 5px;
         text-align: left;
     }
 
-    .input-container input[type="number"] {
+    .input-mode-fields > div input[type="number"] {
         width: 100%;
     }
 
-    .button-group button {
-         display: block; /* Stack buttons vertically */
-         width: 80%; /* Control button width */
-         margin: 8px auto; /* Center stacked buttons */
+    .radio-group {
+        display: block; /* Empilha os botões de rádio */
+        text-align: left;
+        margin-left: 0;
+        margin-bottom: 10px;
     }
-}
+    .mode-label {
+         text-align: left;
+         margin-left: 0;
+    }
 
-@media (max-width: 480px) {
-     h1 {
-         font-size: 1.5em;
-     }
-     button {
-         font-size: 0.9em;
-         padding: 10px 12px;
-     }
-      .button-group button {
+    .button-group button {
+         display: block; /* Empilha os botões */
          width: 90%;
-      }
-      /* Further adjustments for very small screens if needed */
+         margin: 10px auto; /* Centraliza os botões empilhados */
+         padding: 12px;
+    }
+
+    #resultado {
+        padding: 15px;
+        font-size: 0.9em;
+    }
 }
